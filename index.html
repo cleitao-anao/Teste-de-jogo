@@ -2,451 +2,463 @@
 <html lang="pt-BR">
 
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
- <title>Tiro ao Alvo - Reação</title>
- <style>
-  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tiro ao Alvo - Reação</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-  body {
-   margin: 0;
-   overflow: hidden;
-   background-color: #1a1a1a;
-   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-   touch-action: none;
-   user-select: none;
-  }
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #1a1a1a;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      touch-action: none;
+      user-select: none;
+    }
 
-  #gameCanvas {
-   display: block;
-   cursor: crosshair;
-  }
+    #gameCanvas {
+      display: block;
+      cursor: crosshair;
+    }
 
-  #ui-layer {
-   position: absolute;
-   top: 0;
-   left: 0;
-   width: 100%;
-   height: 100%;
-   pointer-events: none;
-   display: flex;
-   flex-direction: column;
-   justify-content: space-between;
-   padding: 20px;
-   box-sizing: border-box;
-  }
+    #ui-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      box-sizing: border-box;
+    }
 
-  .hud-top {
-   display: flex;
-   justify-content: space-between;
-   color: #fff;
-   text-shadow: 2px 2px 0 #000;
-   font-size: 20px;
-   /* Levemente menor para mobile */
-   font-family: 'Press Start 2P', cursive;
-   width: 100%;
-  }
+    .hud-top {
+      display: flex;
+      justify-content: space-between;
+      color: #fff;
+      text-shadow: 2px 2px 0 #000;
+      font-size: 20px;
+      font-family: 'Press Start 2P', cursive;
+      width: 100%;
+    }
 
-  #start-screen,
-  #game-over-screen {
-   position: absolute;
-   top: 50%;
-   left: 50%;
-   transform: translate(-50%, -50%);
-   background: rgba(0, 0, 0, 0.9);
-   padding: 30px;
-   border-radius: 15px;
-   text-align: center;
-   color: white;
-   border: 2px solid #fff;
-   pointer-events: auto;
-   z-index: 10;
-   min-width: 280px;
-  }
+    #start-screen,
+    #game-over-screen {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.9);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      color: white;
+      border: 2px solid #fff;
+      pointer-events: auto;
+      z-index: 10;
+      min-width: 280px;
+    }
 
-  h1 {
-   font-family: 'Press Start 2P', cursive;
-   color: #ff4757;
-   margin-bottom: 20px;
-   font-size: 24px;
-   line-height: 1.5;
-  }
+    h1 {
+      font-family: 'Press Start 2P', cursive;
+      color: #ff4757;
+      margin-bottom: 20px;
+      font-size: 24px;
+      line-height: 1.5;
+    }
 
-  p {
-   font-size: 16px;
-   margin-bottom: 30px;
-   color: #ccc;
-   line-height: 1.4;
-  }
+    p {
+      font-size: 16px;
+      margin-bottom: 30px;
+      color: #ccc;
+      line-height: 1.4;
+    }
 
-  button {
-   background: #2ed573;
-   color: #fff;
-   border: none;
-   padding: 15px 30px;
-   font-size: 16px;
-   border-radius: 5px;
-   cursor: pointer;
-   font-family: 'Press Start 2P', cursive;
-   transition: transform 0.1s;
-   box-shadow: 0 5px 0 #1e8e4c;
-   width: 100%;
-  }
+    button {
+      background: #2ed573;
+      color: #fff;
+      border: none;
+      padding: 15px 30px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Press Start 2P', cursive;
+      transition: transform 0.1s;
+      box-shadow: 0 5px 0 #1e8e4c;
+      width: 100%;
+    }
 
-  button:active {
-   transform: translateY(5px);
-   box-shadow: none;
-  }
+    button:active {
+      transform: translateY(5px);
+      box-shadow: none;
+    }
 
-  button:hover {
-   background: #26af61;
-  }
+    button:hover {
+      background: #26af61;
+    }
 
-  .hidden {
-   display: none !important;
-  }
- </style>
+    .hidden {
+      display: none !important;
+    }
+  </style>
 </head>
 
 <body>
 
- <canvas id="gameCanvas"></canvas>
+  <canvas id="gameCanvas"></canvas>
 
- <div id="ui-layer">
-  <div class="hud-top">
-   <div id="scoreDisplay">SCORE: 0</div>
-   <div id="livesDisplay">VIDAS: 5</div>
+  <div id="ui-layer">
+    <div class="hud-top">
+      <div id="scoreDisplay">SCORE: 0</div>
+      <div id="livesDisplay">VIDAS: 5</div>
+    </div>
   </div>
- </div>
 
- <!-- Tela Inicial -->
- <div id="start-screen">
-  <h1>PEGA NAS BOLAS DO RENAN</h1>
-  <p>Toque nas bolas antes que elas escapem!</p>
-  <button onclick="startGame()">JOGAR</button>
- </div>
+  <!-- Tela Inicial -->
+  <div id="start-screen">
+    <h1>TIRO AO ALVO</h1>
+    <p>Toque nas bolas antes que elas escapem!</p>
+    <button onclick="startGame()">JOGAR</button>
+  </div>
 
- <!-- Tela de Game Over -->
- <div id="game-over-screen" class="hidden">
-  <h1>FIM DE JOGO</h1>
-  <p>Pontuação: <span id="final-score">0</span></p>
-  <button onclick="startGame()">TENTAR DE NOVO</button>
- </div>
+  <!-- Tela de Game Over -->
+  <div id="game-over-screen" class="hidden">
+    <h1>FIM DE JOGO</h1>
+    <p>Pontuação: <span id="final-score">0</span></p>
+    <button onclick="startGame()">TENTAR DE NOVO</button>
+  </div>
 
- <script>
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
-  const scoreDisplay = document.getElementById('scoreDisplay');
-  const livesDisplay = document.getElementById('livesDisplay');
-  const startScreen = document.getElementById('start-screen');
-  const gameOverScreen = document.getElementById('game-over-screen');
-  const finalScoreSpan = document.getElementById('final-score');
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const livesDisplay = document.getElementById('livesDisplay');
+    const startScreen = document.getElementById('start-screen');
+    const gameOverScreen = document.getElementById('game-over-screen');
+    const finalScoreSpan = document.getElementById('final-score');
 
-  // Configuração do Jogo
-  let width, height;
-  let balls = [];
-  let particles = [];
-  let score = 0;
-  let lives = 5;
-  let isPlaying = false;
-  let spawnRate = 1200;
-  let lastSpawnTime = 0;
-  let animationId;
+    // Configuração do Jogo
+    let width, height;
+    let balls = [];
+    let particles = [];
+    let score = 0;
+    let lives = 5;
+    let isPlaying = false;
+    let spawnRate = 1200;
+    let lastSpawnTime = 0;
+    let animationId;
 
-  // Ajustar tamanho do canvas
-  function resize() {
-   width = canvas.width = window.innerWidth;
-   height = canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  // Classe da Bola (Inimigo)
-  class Ball {
-   constructor() {
-    // Tamanho responsivo
-    this.radius = Math.max(25, Math.min(width, height) * 0.05);
-    this.clicked = false;
-
-    // Escolher um padrão de movimento aleatório (1 a 5)
-    this.type = Math.floor(Math.random() * 5) + 1;
-
-    // Configuração baseada no tipo
-    this.setupMovement();
-
-    const colors = ['#ff4757', '#2ed573', '#1e90ff', '#ffa502', '#eccc68', '#7bed9f'];
-    this.color = colors[Math.floor(Math.random() * colors.length)];
-   }
-
-   setupMovement() {
-    // Velocidade baseada na largura da tela para ser justo em mobile/desktop
-    const baseSpeed = width < 600 ? width * 0.008 : width * 0.005;
-
-    switch (this.type) {
-     // 1: Esquerda -> Direita (Parábola)
-     case 1:
-      this.x = -this.radius;
-      // Nasce um pouco mais baixo para evitar sair muito da tela
-      this.y = height * 0.5 + Math.random() * (height * 0.2);
-      this.vx = baseSpeed * 1.5;
-      this.vy = -baseSpeed * 1.8; // Joga pra cima
-      this.gravity = 0.15;
-      break;
-
-     // 2: Direita -> Esquerda (Parábola)
-     case 2:
-      this.x = width + this.radius;
-      this.y = height * 0.5 + Math.random() * (height * 0.2);
-      this.vx = -baseSpeed * 1.5;
-      this.vy = -baseSpeed * 1.8;
-      this.gravity = 0.15;
-      break;
-
-     // 3: Baixo -> Sobe e Volta
-     case 3:
-      this.x = Math.random() * (width - 100) + 50;
-      this.y = height + this.radius;
-      this.vx = (Math.random() - 0.5) * 2;
-      this.vy = -baseSpeed * 2.5;
-      this.gravity = 0.2;
-      break;
-
-     // 4: Baixo -> Cima Reto (Some no topo)
-     case 4:
-      this.x = Math.random() * (width - 100) + 50;
-      this.y = height + this.radius;
-      this.vx = 0;
-      this.vy = -baseSpeed * 1.2;
-      this.gravity = 0;
-      break;
-
-     // 5: Esquerda -> Direita Reto
-     case 5:
-      this.x = -this.radius;
-      this.y = Math.random() * (height - 200) + 100;
-      this.vx = baseSpeed * 1.2;
-      this.vy = 0;
-      this.gravity = 0;
-      break;
+    // Ajustar tamanho do canvas
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
     }
-   }
+    window.addEventListener('resize', resize);
+    resize();
 
-   update() {
-    this.x += this.vx;
-    this.y += this.vy;
-    this.vy += this.gravity;
-    return this.checkBounds();
-   }
+    // Classe da Bola (Inimigo)
+    class Ball {
+      constructor() {
+        // Tamanho responsivo: entre 25px e 5% da menor dimensão da tela
+        this.radius = Math.max(25, Math.min(width, height) * 0.05);
+        this.clicked = false;
 
-   // CORREÇÃO: Lógica de morte aprimorada
-   checkBounds() {
-    const limitRight = width + this.radius;
-    const limitLeft = -this.radius;
+        this.type = Math.floor(Math.random() * 5) + 1;
 
-    switch (this.type) {
-     case 1: // Esquerda -> Direita (Arco)
-      // Só morre se cair no chão ou passar direto pela direita
-      // Ignora se subir além do teto (pois a gravidade trás de volta)
-      if (this.y - this.radius > height) return false;
-      if (this.x > limitRight) return false;
-      break;
+        this.setupMovement();
 
-     case 2: // Direita -> Esquerda (Arco)
-      // Só morre se cair no chão ou passar direto pela esquerda
-      if (this.y - this.radius > height) return false;
-      if (this.x < limitLeft) return false;
-      break;
+        const colors = ['#ff4757', '#2ed573', '#1e90ff', '#ffa502', '#eccc68', '#7bed9f'];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
 
-     case 3: // Sobe e Desce
-      // Só morre se cair no chão na volta
-      if (this.vy > 0 && this.y - this.radius > height) return false;
-      break;
+      setupMovement() {
+        // Configurações Físicas Responsivas
+        // Gravidade escala levemente com a altura para manter a sensação de peso em telas grandes
+        const responsiveGravity = 0.15 + (height * 0.0003);
+        const baseSpeedX = width * 0.004; // Velocidade horizontal baseada na largura
 
-     case 4: // Foguete (Sobe Reto)
-      // Esse é o único que morre se sair por CIMA (você perdeu ele)
-      if (this.y + this.radius < 0) return false;
-      break;
+        switch (this.type) {
+          // 1: Esquerda -> Direita (Arco Perfeito)
+          case 1:
+            this.x = -this.radius;
+            // Nasce no terço inferior (75% a 90% da altura)
+            this.y = height * 0.75 + Math.random() * (height * 0.15);
 
-     case 5: // Reto Horizontal
-      if (this.x > limitRight) return false;
-      break;
+            this.gravity = responsiveGravity;
+
+            // CÁLCULO FÍSICO: Define uma altura alvo aleatória (entre 15% e 30% do topo da tela)
+            // Isso garante que a bola NUNCA saia por cima
+            const peakHeight1 = (height * 0.15) + Math.random() * (height * 0.15);
+            const jumpHeight1 = this.y - peakHeight1;
+
+            // Fórmula: v = sqrt(2 * g * h) -> Velocidade exata para atingir aquela altura
+            this.vy = -Math.sqrt(2 * this.gravity * jumpHeight1);
+
+            // Velocidade X aleatória mas suficiente para cruzar boa parte da tela
+            this.vx = baseSpeedX + Math.random() * (width * 0.002);
+            break;
+
+          // 2: Direita -> Esquerda (Arco Perfeito)
+          case 2:
+            this.x = width + this.radius;
+            this.y = height * 0.75 + Math.random() * (height * 0.15);
+
+            this.gravity = responsiveGravity;
+
+            const peakHeight2 = (height * 0.15) + Math.random() * (height * 0.15);
+            const jumpHeight2 = this.y - peakHeight2;
+
+            this.vy = -Math.sqrt(2 * this.gravity * jumpHeight2);
+            this.vx = -(baseSpeedX + Math.random() * (width * 0.002));
+            break;
+
+          // 3: Baixo -> Sobe e Volta
+          case 3:
+            this.x = Math.random() * (width - 100) + 50;
+            this.y = height + this.radius;
+
+            this.gravity = responsiveGravity;
+
+            // Sobe até cerca de 20-40% do topo
+            const peakHeight3 = (height * 0.2) + Math.random() * (height * 0.2);
+            const jumpHeight3 = this.y - peakHeight3;
+
+            this.vy = -Math.sqrt(2 * this.gravity * jumpHeight3);
+            this.vx = (Math.random() - 0.5) * (width * 0.002);
+            break;
+
+          // 4: Baixo -> Cima Reto (Foguete)
+          case 4:
+            this.x = Math.random() * (width - 100) + 50;
+            this.y = height + this.radius;
+            this.vx = 0;
+            this.gravity = 0;
+            // Velocidade constante baseada na altura
+            this.vy = -(height * 0.006 + Math.random() * height * 0.002);
+            break;
+
+          // 5: Esquerda -> Direita Reto
+          case 5:
+            this.x = -this.radius;
+            this.y = Math.random() * (height - 200) + 100;
+            this.vx = width * 0.005 + Math.random() * width * 0.002;
+            this.vy = 0;
+            this.gravity = 0;
+            break;
+        }
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += this.gravity;
+        return this.checkBounds();
+      }
+
+      checkBounds() {
+        const limitRight = width + this.radius;
+        const limitLeft = -this.radius;
+
+        switch (this.type) {
+          case 1: // Esquerda -> Direita
+            // Só perde vida se cair abaixo da tela (chão)
+            // Se sair pela direita MUITO alto, também não conta (mas o cálculo físico evita isso)
+            if (this.y - this.radius > height) return false;
+            if (this.x > limitRight && this.y > 0) return false;
+            break;
+
+          case 2: // Direita -> Esquerda
+            if (this.y - this.radius > height) return false;
+            if (this.x < limitLeft && this.y > 0) return false;
+            break;
+
+          case 3: // Sobe e Desce
+            if (this.vy > 0 && this.y - this.radius > height) return false;
+            break;
+
+          case 4: // Foguete
+            if (this.y + this.radius < 0) return false;
+            break;
+
+          case 5: // Reto
+            if (this.x > limitRight) return false;
+            break;
+        }
+        return true;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+
+        // Brilho
+        ctx.beginPath();
+        ctx.arc(this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius / 3, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.fill();
+
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
     }
-    return true; // Ainda está em jogo
-   }
 
-   draw() {
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    ctx.fillStyle = this.color;
-    ctx.fill();
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = Math.random() * 5 + 2;
+        this.vx = Math.cos(angle) * velocity;
+        this.vy = Math.sin(angle) * velocity;
+        this.alpha = 1;
+        this.decay = Math.random() * 0.03 + 0.02;
+      }
 
-    // Efeito de brilho 3D simples
-    ctx.beginPath();
-    ctx.arc(this.x - this.radius * 0.3, this.y - this.radius * 0.3, this.radius / 3, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
-    ctx.fill();
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= this.decay;
+      }
 
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-   }
-  }
-
-  class Particle {
-   constructor(x, y, color) {
-    this.x = x;
-    this.y = y;
-    this.color = color;
-    const angle = Math.random() * Math.PI * 2;
-    const velocity = Math.random() * 5 + 2;
-    this.vx = Math.cos(angle) * velocity;
-    this.vy = Math.sin(angle) * velocity;
-    this.alpha = 1;
-    this.decay = Math.random() * 0.03 + 0.02;
-   }
-
-   update() {
-    this.x += this.vx;
-    this.y += this.vy;
-    this.alpha -= this.decay;
-   }
-
-   draw() {
-    ctx.save();
-    ctx.globalAlpha = this.alpha;
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, 4, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-   }
-  }
-
-  function handleInput(e) {
-   if (!isPlaying) return;
-
-   let clientX, clientY;
-   if (e.type === 'touchstart') {
-    // Impede comportamento padrão de toque (scroll/zoom)
-    // e.preventDefault(); 
-    clientX = e.touches[0].clientX;
-    clientY = e.touches[0].clientY;
-   } else {
-    clientX = e.clientX;
-    clientY = e.clientY;
-   }
-
-   // Hitbox levemente maior (+15px) para facilitar em telas de toque
-   for (let i = balls.length - 1; i >= 0; i--) {
-    const b = balls[i];
-    const dx = clientX - b.x;
-    const dy = clientY - b.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-
-    if (dist < b.radius + 15) {
-     createExplosion(b.x, b.y, b.color);
-     balls.splice(i, 1);
-     score += 10;
-     scoreDisplay.innerText = `SCORE: ${score}`;
-
-     // Aumentar dificuldade progressiva
-     if (score % 50 === 0 && spawnRate > 400) {
-      spawnRate -= 50;
-     }
-     return;
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
     }
-   }
-  }
 
-  function createExplosion(x, y, color) {
-   for (let i = 0; i < 15; i++) {
-    particles.push(new Particle(x, y, color));
-   }
-  }
+    function handleInput(e) {
+      if (!isPlaying) return;
 
-  function gameLoop(timestamp) {
-   if (!isPlaying) return;
+      let clientX, clientY;
+      if (e.type === 'touchstart') {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
 
-   ctx.clearRect(0, 0, width, height);
+      for (let i = balls.length - 1; i >= 0; i--) {
+        const b = balls[i];
+        const dx = clientX - b.x;
+        const dy = clientY - b.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
 
-   if (timestamp - lastSpawnTime > spawnRate) {
-    balls.push(new Ball());
-    lastSpawnTime = timestamp;
-   }
+        if (dist < b.radius + 15) {
+          createExplosion(b.x, b.y, b.color);
+          balls.splice(i, 1);
+          score += 10;
+          scoreDisplay.innerText = `SCORE: ${score}`;
 
-   for (let i = balls.length - 1; i >= 0; i--) {
-    const b = balls[i];
-    const stillAlive = b.update();
-    b.draw();
-
-    if (!stillAlive) {
-     balls.splice(i, 1);
-     loseLife();
+          if (score % 50 === 0 && spawnRate > 400) {
+            spawnRate -= 50;
+          }
+          return;
+        }
+      }
     }
-   }
 
-   for (let i = particles.length - 1; i >= 0; i--) {
-    const p = particles[i];
-    p.update();
-    p.draw();
-    if (p.alpha <= 0) {
-     particles.splice(i, 1);
+    function createExplosion(x, y, color) {
+      for (let i = 0; i < 15; i++) {
+        particles.push(new Particle(x, y, color));
+      }
     }
-   }
 
-   animationId = requestAnimationFrame(gameLoop);
-  }
+    function gameLoop(timestamp) {
+      if (!isPlaying) return;
 
-  function loseLife() {
-   lives--;
-   livesDisplay.innerText = `VIDAS: ${lives}`;
+      ctx.clearRect(0, 0, width, height);
 
-   // Flash vermelho na tela
-   const flash = document.createElement('div');
-   flash.style.position = 'absolute';
-   flash.style.top = '0';
-   flash.style.left = '0';
-   flash.style.width = '100%';
-   flash.style.height = '100%';
-   flash.style.backgroundColor = 'rgba(255, 0, 0, 0.3)';
-   flash.style.pointerEvents = 'none';
-   document.body.appendChild(flash);
-   setTimeout(() => flash.remove(), 100);
+      if (timestamp - lastSpawnTime > spawnRate) {
+        balls.push(new Ball());
+        lastSpawnTime = timestamp;
+      }
 
-   if (lives <= 0) {
-    gameOver();
-   }
-  }
+      for (let i = balls.length - 1; i >= 0; i--) {
+        const b = balls[i];
+        const stillAlive = b.update();
+        b.draw();
 
-  function startGame() {
-   score = 0;
-   lives = 5;
-   spawnRate = 1000;
-   balls = [];
-   particles = [];
-   isPlaying = true;
+        if (!stillAlive) {
+          balls.splice(i, 1);
+          loseLife();
+        }
+      }
 
-   scoreDisplay.innerText = `SCORE: ${score}`;
-   livesDisplay.innerText = `VIDAS: ${lives}`;
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.update();
+        p.draw();
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+        }
+      }
 
-   startScreen.classList.add('hidden');
-   gameOverScreen.classList.add('hidden');
+      animationId = requestAnimationFrame(gameLoop);
+    }
 
-   lastSpawnTime = performance.now();
-   gameLoop(performance.now());
-  }
+    function loseLife() {
+      lives--;
+      livesDisplay.innerText = `VIDAS: ${lives}`;
 
-  function gameOver() {
-   isPlaying = false;
-   cancelAnimationFrame(animationId);
-   finalScoreSpan.innerText = score;
-   gameOverScreen.classList.remove('hidden');
-  }
+      const flash = document.createElement('div');
+      flash.style.position = 'absolute';
+      flash.style.top = '0';
+      flash.style.left = '0';
+      flash.style.width = '100%';
+      flash.style.height = '100%';
+      flash.style.backgroundColor = 'rgba(255, 0, 0, 0.3)';
+      flash.style.pointerEvents = 'none';
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 100);
 
-  window.addEventListener('mousedown', handleInput);
-  window.addEventListener('touchstart', handleInput, { passive: false });
+      if (lives <= 0) {
+        gameOver();
+      }
+    }
 
- </script>
+    function startGame() {
+      score = 0;
+      lives = 5;
+      spawnRate = 1000;
+      balls = [];
+      particles = [];
+      isPlaying = true;
+
+      scoreDisplay.innerText = `SCORE: ${score}`;
+      livesDisplay.innerText = `VIDAS: ${lives}`;
+
+      startScreen.classList.add('hidden');
+      gameOverScreen.classList.add('hidden');
+
+      lastSpawnTime = performance.now();
+      gameLoop(performance.now());
+    }
+
+    function gameOver() {
+      isPlaying = false;
+      cancelAnimationFrame(animationId);
+      finalScoreSpan.innerText = score;
+      gameOverScreen.classList.remove('hidden');
+    }
+
+    window.addEventListener('mousedown', handleInput);
+    window.addEventListener('touchstart', handleInput, { passive: false });
+
+  </script>
 </body>
 
 </html>
